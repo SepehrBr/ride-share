@@ -41,8 +41,17 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relations
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
     }
 }
