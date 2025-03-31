@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TripAccepted;
+use App\Events\TripEnded;
+use App\Events\TripLocationUpdate;
+use App\Events\TripStarted;
 use App\Models\Trip;
 use App\Http\Requests\StoreTripRequest;
 use App\Http\Requests\UpdateTripRequest;
@@ -103,6 +107,9 @@ class TripController extends Controller
         // eager load driver and user related to current trip
         $trip->load('driver.user');
 
+        // trigger event
+        TripAccepted::dispatch($trip, $request->user());
+
         // return trip
         return $trip;
     }
@@ -121,6 +128,9 @@ class TripController extends Controller
 
         $trip->load('driver.user');
 
+        // trigger start event
+        TripStarted::dispatch($trip, $request->user());
+
         return $trip;
     }
 
@@ -138,11 +148,14 @@ class TripController extends Controller
 
         $trip->load('driver.user');
 
+        // trigger end event
+        TripEnded::dispatch($trip, $request->user());
+
         return $trip;
     }
 
     /**
-     * updates driver's location 
+     * updates driver's location
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Trip $trip
      * @return Trip
@@ -158,6 +171,9 @@ class TripController extends Controller
         ]);
 
         $trip->load('driver.user');
+
+        // trigger location event
+        TripLocationUpdate::dispatch($trip, $request->user());
 
         return $trip;
     }
