@@ -10,6 +10,13 @@ class Trip extends Model
     /** @use HasFactory<\Database\Factories\TripFactory> */
     use HasFactory;
     protected $guarded = [];
+    protected $casts = [
+        'origin' => 'array',
+        'destination' => 'array',
+        'destination_name' => 'array',
+        'is_started' => 'boolean',
+        'is_completed' => 'boolean',
+    ];
 
     // Relations
     public function user()
